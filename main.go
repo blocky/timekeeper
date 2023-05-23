@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ianhecker/timekeeper/cmd"
+	"github.com/blocky/timekeeper/cmd"
 )
 
 func main() {

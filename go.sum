@@ -1,6 +1,4 @@
 github.com/cpuguy83/go-md2man/v2 v2.0.2/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
-github.com/ianhecker/timekeeper v0.0.0-20230523011428-921f12b13c70 h1:mDXlx4EYrN7iPak1Qc4txSjhVM6hKpi7YEWK2hzqjUY=
-github.com/ianhecker/timekeeper v0.0.0-20230523011428-921f12b13c70/go.mod h1:Xkc8EYKKChzLQ3MnJKSqwVGgjJQdssIdeVn5kBaGh/c=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=

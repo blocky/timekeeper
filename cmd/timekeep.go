@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ianhecker/timekeeper/timekeep"
+	"github.com/blocky/timekeeper/timekeep"
 )
 
 var addEntryCmd = &cobra.Command{

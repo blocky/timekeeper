@@ -105,6 +105,7 @@ func (tk *Timekeeper) AskTask() (Task, error) {
 
 func (tk *Timekeeper) AskDetails() string {
 	details := tk.Ask("what did you do?")
+	fmt.Printf("details: %s", details)
 	return details
 }
 

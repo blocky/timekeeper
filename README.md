@@ -38,5 +38,18 @@ You will need to set the following values in the .clockify-cli.yaml
 	token: <your-clockify-token>
 
 ## Test Out Logging Your Hours
+This tool allows you to input your hours retrospectively. You will need to know:
+1) The Year, Month, and Day in the format: YYYY-MM-DD
+2) Starting hour & minutes in military time: HHMM
+3) Stopping hours & minutes in military time: HHMM
+4) The Blocky Epic you worked on. This is a Clockify Task
+
+The binary will prompt you for input and then output your time entry
 
 	tk add-entry ~/timecard.md
+
+The markdown should follow the format
+
+	## YYYY-MM-DD:HHMM-HMMM CLOCKIFY-PROJECT CLOCKIFY-TASK DESCRIPTION
+	## <year>-<month>-<day>:<starting-hour-and-minutes>-<ending-hour-and-minues> clockify-project clockify-task description
+

@@ -39,4 +39,4 @@ You will need to set the following values in the .clockify-cli.yaml
 
 ## Test Out Logging Your Hours
 
-	tk ~/timecard.md
+	tk add-entry ~/timecard.md

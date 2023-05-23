@@ -32,7 +32,7 @@ type Entry struct {
 }
 
 func (e Entry) String() string {
-	return fmt.Sprintf("## %s %s %s '%s'\n", e.Time, e.Task.project, e.Task.ID, e.Details)
+	return fmt.Sprintf("## %s %s %s %s\n", e.Time, e.Task.project, e.Task.ID, e.Details)
 }
 
 var tasks = map[int]Task{

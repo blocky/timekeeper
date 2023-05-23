@@ -53,3 +53,25 @@ The markdown should follow the format
 	## YYYY-MM-DD:HHMM-HMMM CLOCKIFY-PROJECT CLOCKIFY-TASK DESCRIPTION
 	## <year>-<month>-<day>:<starting-hour-and-minutes>-<ending-hour-and-minues> clockify-project clockify-task description
 
+## Pushing Hours to Clockify
+All your hours are stored in your local markdown file. Currently, the markdown
+line
+
+	---
+
+This is used to denote the beginning of the hours that should be logged. In the
+future, the tool will be able to tell what hours it has & has not logged
+
+For now, place --- after lines you have sent to Clockify
+
+	## my old hours
+	---
+	## hours to send to clockify
+
+This script will grep the hours after the ---
+
+	last-weeks-hours timecard.md
+
+Now, the scripts will parse your hours and bulk update Clockify
+
+	last-weeks-hours timecard.md | bulk-update-hours

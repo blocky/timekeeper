@@ -31,4 +31,4 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-echo "$LAST_WEEKS_PUNCHCARDS" | grep -E "$PUNCHCARD_REGEX"
+echo "$LAST_WEEKS_PUNCHCARDS" | grep -E "$PUNCHCARD_REGEX" | tac

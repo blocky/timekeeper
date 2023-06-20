@@ -2,9 +2,9 @@ package timekeep
 
 import (
 	"bufio"
+	_ "embed"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -51,9 +51,9 @@ func MakeMilitaryTime(s string) (MilitaryTime, error) {
 }
 
 type Task struct {
-	Name    string
-	ID      string
-	project string
+	Name    string `json:"name"`
+	ID      string `json:"id"`
+	Project string `json:"projectId"`
 }
 
 type Date struct {
@@ -75,52 +75,20 @@ type Entry struct {
 }
 
 func (e Entry) String() string {
-	return fmt.Sprintf("## %s %s %s %s\n", e.Date, e.Task.project, e.Task.ID, e.Details)
-}
-
-var tasks = map[int]Task{
-	1:  {"Meetings", "6109a1f50a335f28d1599ef3", "5f47d5879d6dc04fbfedcdab"},
-	2:  {"ZPR - EKS K8 v1.23", "6446789ab958c4718390013a", "5f91ec0fb1d41c38c2d6719b"},
-	3:  {"ZPR - DevOps Alpha", "64625befb2a18e3578754eb7", "5f91ec0fb1d41c38c2d6719b"},
-	4:  {"ZPR - 10k Requests", "63aee243a3e51625ef082042", "5f91ec0fb1d41c38c2d6719b"},
-	5:  {"IPR 3", "64625b8487e7196c5c4c3df6", "5f91ec0fb1d41c38c2d6719b"},
-	6:  {"Infinity Pool of Crises", "5f91ef2eb1d41c38c2d6932f", "5f91ec0fb1d41c38c2d6719b"},
-	7:  {"Dugnad", "5f91eca7b1d41c38c2d67837", "5f91ec0fb1d41c38c2d6719b"},
-	8:  {"ZPR - Update Mocks", "643405d2cb8fab2f0d10f6b5", "5f91ec0fb1d41c38c2d6719b"},
-	9:  {"ZPR - Strong Verify", "63aee21ca3e51625ef081f39", "5f91ec0fb1d41c38c2d6719b"},
-	10: {"White Paper 0.3", "643405bbcb8fab2f0d10f430", "5f91ec0fb1d41c38c2d6719b"},
-	11: {"COGS", "63f766a08c5c0806c7bb015b", "5f91ec0fb1d41c38c2d6719b"},
-	12: {"Security Policy Implementation", "635008cb000c0f0aca116dad", "5f91ec0fb1d41c38c2d6719b"},
-	13: {"Market Research", "6304cf552f286f53f966fbcc", "5f91ec0fb1d41c38c2d6719b"},
-	14: {"ZPR - Detached Cacheit", "62c72c4710ace715d5ceda7f", "5f91ec0fb1d41c38c2d6719b"},
-	15: {"SIA Proposal", "643405635cbbcc37df575eb0", "5f91ec0fb1d41c38c2d6719b"},
-	16: {"Grant Admin", "61f15163c32016098b513e86", "5f91ec0fb1d41c38c2d6719b"},
-	17: {"NSDI Submission", "643406065cbbcc37df577158", "5f91ec0fb1d41c38c2d6719b"},
-}
-
-func printTasks() {
-	var list = make([]int, len(tasks))
-	var i int
-
-	for key := range tasks {
-		list[i] = key
-		i++
-	}
-	sort.Slice(list, func(i, j int) bool { return list[i] < list[j] })
-
-	for _, i := range list {
-		task := tasks[i]
-		fmt.Printf("%d) %s\n", i, task.Name)
-	}
+	return fmt.Sprintf("## %s %s %s %s\n", e.Date, e.Task.Project, e.Task.ID, e.Details)
 }
 
 type Timekeeper struct {
 	*bufio.Writer
+	tasks []Task
 }
 
-func MakeTimekeeper(f *os.File) Timekeeper {
+func MakeTimekeeper(
+	f *os.File,
+	tasks []Task,
+) Timekeeper {
 	w := bufio.NewWriter(f)
-	return Timekeeper{w}
+	return Timekeeper{w, tasks}
 }
 
 func (tk *Timekeeper) AskTime() (Date, error) {
@@ -157,23 +125,25 @@ func (tk *Timekeeper) AskTime() (Date, error) {
 }
 
 func (tk *Timekeeper) AskTask() (Task, error) {
-	printTasks()
+	tk.PrintTasks()
 
 	num, err := tk.AskInt("what task? (id number)")
 	if err != nil {
 		return Task{}, err
 	}
 
-	task, exists := tasks[num]
-	if !exists {
+	if num < 0 || num > len(tk.tasks)-1 {
 		return Task{}, fmt.Errorf("No task exists for number:%d", num)
 	}
+	task := tk.tasks[num]
+	fmt.Printf("selected task:'%s' id:'%s' project:'%s'\n", task.Name, task.ID, task.Project)
+
 	return task, nil
 }
 
 func (tk *Timekeeper) AskDetails() string {
 	details := tk.Ask("what did you do?")
-	fmt.Printf("details: %s", details)
+	fmt.Printf("details: %s\n", details)
 	return details
 }
 
@@ -248,6 +218,14 @@ func (tk *Timekeeper) AskMilitaryTime(question string) (MilitaryTime, error) {
 		return "", err
 	}
 	return mt, nil
+}
+
+func (tk *Timekeeper) PrintTasks() {
+	fmt.Printf("Tasks\n-----\n")
+	for i, task := range tk.tasks {
+		fmt.Printf("%d) %s\n", i, task.Name)
+	}
+	fmt.Printf("-----\n")
 }
 
 func prompt(label string) string {

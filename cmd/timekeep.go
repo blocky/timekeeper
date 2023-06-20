@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	_ "embed"
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -9,13 +11,16 @@ import (
 	"github.com/blocky/timekeeper/timekeep"
 )
 
+//go:embed configs/tasks.json
+var tasksJSON []byte
+
 var addEntryCmd = &cobra.Command{
 	Use:   "add-entry [file]",
 	Short: "",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		filename := args[0]
-		run(filename)
+		addEntry(tasksJSON, filename)
 	},
 }
 
@@ -23,12 +28,16 @@ func init() {
 	rootCmd.AddCommand(addEntryCmd)
 }
 
-func run(filename string) {
+func addEntry(tasksJSON []byte, filename string) {
+	var tasks []timekeep.Task
+	err := json.Unmarshal(tasksJSON, &tasks)
+	check(err)
+
 	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	check(err)
 	defer f.Close()
 
-	tk := timekeep.MakeTimekeeper(f)
+	tk := timekeep.MakeTimekeeper(f, tasks)
 	entry, err := tk.MakeEntry()
 	check(err)
 

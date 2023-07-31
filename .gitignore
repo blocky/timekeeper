@@ -1,0 +1,5 @@
+# JSON config files
+cmd/configs/epics.json
+cmd/configs/meetings.json
+cmd/configs/tasks.json
+cmd/configs/timeoff.json

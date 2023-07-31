@@ -3,8 +3,9 @@ GO=$(GOGLAGS) go
 
 GIT_COMMIT=$(shell git rev-parse --short HEAD)
 CONFIGS=cmd/configs
-TASKS_PHASE_2=$(CONFIGS)/tasks-phase-2.json
-TASKS_MEETINGS=$(CONFIGS)/tasks-meetings.json
+EPICS=$(CONFIGS)/epics.json
+MEETINGS=$(CONFIGS)/meetings.json
+TIMEOFF=$(CONFIGS)/timeoff.json
 TASKS=$(CONFIGS)/tasks.json
 
 configs:
@@ -21,9 +22,11 @@ test:
 
 tasks: configs
 	@clockify-cli tasks list \
-		--project 5f91ec0fb1d41c38c2d6719b --json > $(TASKS_PHASE_2)
+		--project 5f91ec0fb1d41c38c2d6719b --json > $(EPICS)
 	@clockify-cli tasks list \
-		--project 5f47d5879d6dc04fbfedcdab --json > $(TASKS_MEETINGS)
+		--project 5f47d5879d6dc04fbfedcdab --json > $(MEETINGS)
+	@clockify-cli tasks list \
+		--project 61a4d4563b4281137e936e9d --json > $(TIMEOFF)
 	@jq -s 'add' $(CONFIGS)/*.json \
 		| jq 'map(. | select(.status=="ACTIVE") | {id, name, projectId})' \
 		| jq -s '.[] | sort_by(.name)' > $(TASKS)

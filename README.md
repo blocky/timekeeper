@@ -11,8 +11,16 @@ This file will hold the automated markdown
 
 I also recommend that you place this into version control. A basic repo will do
 
+## Fetch Tasks
+You will need to fetch the different epics, time off, and meetings tasks
+
+	make tasks
+
+This will create a file that will be embedded into the timekeep binary
+
 ## Install the Timekeeper Binary
-Check into the repo and build & install a binary
+Check into the repo and build & install a binary. This will also automatically
+embed the necessary Clockify tasks as JSON into the binary
 
 	make install
 

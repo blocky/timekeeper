@@ -12,6 +12,6 @@ type Date struct {
 	Stop  MilitaryTime
 }
 
-func (t Date) String() string {
-	return fmt.Sprintf("%d-%s-%s:%s-%s", t.Year, t.Month, t.Day, t.Start, t.Stop)
+func (d Date) String() string {
+	return fmt.Sprintf("%d-%s-%s:%s-%s", d.Year, d.Month, d.Day, d.Start, d.Stop)
 }

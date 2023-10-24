@@ -28,3 +28,18 @@ func MakeEntry(
 		Details: details,
 	}
 }
+
+// func (e *Entry) Marshal() ([]byte, error) {
+// 	return []byte(e.String()), nil
+// }
+
+// func (e *Entry) Unmarshal(bytes []byte) error {
+// 	pattern := `^##\s(?P<date>[\d]{4}-[\d]{2}-[\d]{2}:[\d]{4}-[\d]{4})\s(?P<project>[[:alnum:]]{24})\s(?P<id>[[:alnum:]]{24})\s(?P<details>.*)`
+// 	r := regexp.MustCompile(pattern)
+// 	matches := r.FindStringSubmatch()
+
+// 	if len(matches) != 5 {
+// 		return fmt.Errorf("key:'%s' does not match regex", bytes)
+// 	}
+
+// }

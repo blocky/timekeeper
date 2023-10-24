@@ -14,7 +14,7 @@ type Entry struct {
 }
 
 func (e Entry) String() string {
-	return fmt.Sprintf("## %s %s %s %s\n", e.Date, e.Task.Project, e.Task.ID, e.Details)
+	return fmt.Sprintf("## %s %s %s %s", e.Date, e.Task.Project, e.Task.ID, e.Details)
 }
 
 func MakeEntry(

@@ -4,11 +4,11 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/blocky/timekeeper/internal/ask"
+	"github.com/blocky/timekeeper/internal/tap"
 	"github.com/blocky/timekeeper/internal/task"
 	"github.com/blocky/timekeeper/internal/timecard"
 )
@@ -47,16 +47,16 @@ func addEntry(tasksJSON []byte, filename string) {
 	err := json.Unmarshal(tasksJSON, &tasks)
 	check(err)
 
-	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	tap, err := tap.MakeTap(filename)
 	check(err)
-	defer f.Close()
+	defer tap.Close()
 
 	entry, err := ask.AskEntry(tasks)
 	check(err)
 
 	fmt.Printf("time entry is:\n%s", entry)
 
-	t := timecard.MakeTimecard(f)
+	t := timecard.MakeTimecard(tap)
 	err = t.WriteEntry(entry)
 	check(err)
 }

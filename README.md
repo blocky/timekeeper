@@ -3,83 +3,100 @@ A small set of tools to automate timekeeping for Clockify while recording a
 backup set of hours in markdown
 
 ## Set Up Timecard
-Create an empty file of your choice for time keeping. I recommened:
+Create an empty file of your choice for time keeping. I recommend setting up a
+version control system for your hours and a symbolic link:
 
-	touch ~/timecard.md
+```bash
+mkdir timecards
+touch timecards/timecard.json
+ln -s /home/USER/timecards/timecard.json /home/USER/
+```
 
-This file will hold the automated markdown
-
-I also recommend that you place this into version control. A basic repo will do
-
-## Fetch Tasks
-You will need to fetch the different epics, time off, and meetings tasks
-
-	make tasks
-
-This will create a file that will be embedded into the timekeep binary
-
-## Install the Timekeeper Binary
-Check into the repo and build & install a binary. This will also automatically
-embed the necessary Clockify tasks as JSON into the binary
-
-	make install
-
-## Source Bash Scripts
-You will need to source the Bash scripts so that you can update Clockify
-
-	vi ~/.bash_profile
-	export PATH="/home/USER/timekeeper/sh:$PATH"
+This file will hold your hour entries in JSON
 
 ## Clockify-cli
-These tools leverage Clockify-cli to send hours to Clockify
+These tools leverage Clockify-cli to do things like send hours to Clockify or
+fetch list of active epics
+
+```bash
 https://github.com/lucassabreu/clockify-cli
+```
 
-You will need to download and install the binary
+1. You will need to download and install the binary
+2. You will need to setup a config
 
-You will need to setup the config
+```bash
+clockify-cli config
+```
 
-	clockify-cli config
+3. You will need to set the following values in the `.clockify-cli.yaml`
 
-You will need to set the following values in the .clockify-cli.yaml
+```yaml
+allow-incomplete: true
+token: <your-clockify-token>
+```
 
-	allow-incomplete: true
-	token: <your-clockify-token>
+## Fetch Tasks
+You will need to fetch the different epics from clockify. These include epics
+for work, time off, and meetings. This make command will fetch all the pertinent
+epics and combine them into one list for the Golang tool to use
 
-## Test Out Logging Your Hours
+```bash
+make tasks
+```
+
+This list will be embedded into the Golang binary - so it is important to update
+this list regurlary for active epics
+
+## Install the Timekeeper Binary
+Check into the repo and build & install a binary
+
+> This will automatically embed current epics from Clockify into the binary
+
+```bash
+make install
+```
+
+## Logging your Hours
 This tool allows you to input your hours retrospectively. You will need to know:
-1) The Year, Month, and Day in the format: YYYY-MM-DD
-2) Starting hour & minutes in military time: HHMM
-3) Stopping hours & minutes in military time: HHMM
-4) The Blocky Epic you worked on. This is a Clockify Task
 
-The binary will prompt you for input and then output your time entry
+1. Month
+2. Day
+2. Starting hour & minutes in military time: HHMM
+	a. 8:00am -> 0800
+3. Stopping hours & minutes in military time: HHMM
+	a. 5:00pm -> 1700
+4. Name of the Blocky Epic you worked on
+5. Brief description of your work
 
-	tk add-entry ~/timecard.md
+The binary will prompt you for input and then append your time entry to the end
+of the file
 
-The markdown should follow the format
+```bash
+tk add entry ~/timecard.json
+```
 
-	## YYYY-MM-DD:HHMM-HMMM CLOCKIFY-PROJECT CLOCKIFY-TASK DESCRIPTION
-	## <year>-<month>-<day>:<starting-hour-and-minutes>-<ending-hour-and-minues> clockify-project clockify-task description
+## Listing your Hours
+You can list your hours from your timecard file. Some examples are:
 
-## Pushing Hours to Clockify
-All your hours are stored in your local markdown file. Currently, the markdown
-line
+```bash
+tk list --all ~/timecard.json
+tk list --all --pretty ~/timecard.json
+tk list -n 3 ~/timecard.json
+tk list -n 3 --pretty ~/timecard.json
+```
 
-	---
+## Upload Hours to Clockify
+Currenty, there is no system for recognizing which hours have or have not been
+uploaded to Clockify
 
-This is used to denote the beginning of the hours that should be logged. In the
-future, the tool will be able to tell what hours it has & has not logged
+> Uploading hours that have already been uploaded will cause duplication in
+Clockify! - please be aware of what hours you are uploading to prevent
+large-scale duplication!
 
-For now, place --- after lines you have sent to Clockify
+To upload your most recent entry to Clockify:
 
-	## my old hours
-	---
-	## hours to send to clockify
-
-This script will grep the hours after the ---
-
-	last-weeks-hours timecard.md
-
-Now, the scripts will parse your hours and bulk update Clockify
-
-	last-weeks-hours timecard.md | bulk-update-hours
+```bash
+tk list -n 1 ~/timecard.json
+tk upload -n 1 ~/timecard.json
+```

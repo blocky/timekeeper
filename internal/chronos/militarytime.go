@@ -17,6 +17,11 @@ func MakeMilitaryTime(s string) (MilitaryTime, error) {
 	return MilitaryTime(s), nil
 }
 
+func (m MilitaryTime) TimeWithColon() string {
+	s := string(m)
+	return s[0:2] + ":" + s[2:4]
+}
+
 func (mt *MilitaryTime) UnmarshalJSON(bytes []byte) error {
 	var s string
 	err := json.Unmarshal(bytes, &s)

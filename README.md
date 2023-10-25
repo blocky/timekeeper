@@ -12,7 +12,7 @@ touch timecards/timecard.json
 ln -s /home/USER/timecards/timecard.json /home/USER/
 ```
 
-This file will hold your hour entries in JSON
+This file will hold your hour entries in JSON1
 
 ## Clockify-cli
 These tools leverage Clockify-cli to do things like send hours to Clockify or
@@ -63,10 +63,11 @@ This tool allows you to input your hours retrospectively. You will need to know:
 1. Month
 2. Day
 2. Starting hour & minutes in military time: HHMM
-	a. 8:00am -> 0800
+	- 8:00am -> 0800
 3. Stopping hours & minutes in military time: HHMM
-	a. 5:00pm -> 1700
+	- 5:00pm -> 1700
 4. Name of the Blocky Epic you worked on
+	- Epics will be listed and you can select the correct one
 5. Brief description of your work
 
 The binary will prompt you for input and then append your time entry to the end

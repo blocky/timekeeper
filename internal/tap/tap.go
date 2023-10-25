@@ -19,7 +19,7 @@ type Tap struct {
 }
 
 func MakeTap(filename string) (Tap, error) {
-	file, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
+	file, err := os.OpenFile(filename, os.O_APPEND|os.O_RDWR, os.ModeAppend)
 	if err != nil {
 		return Tap{}, fmt.Errorf("could not tap file: %s", err)
 	}
@@ -30,21 +30,24 @@ func MakeTapFromRaw(file *os.File, maxByteSize int64) Tap {
 	return Tap{file, maxByteSize}
 }
 
-func (t Tap) Close() error {
+func (t *Tap) Close() error {
 	return t.Close()
 }
 
-func (t Tap) ReadAll() ([]byte, error) {
-	err := checkSize(t.file, t.maxByteSize)
-	if err != nil {
-		return nil, err
-	}
-	return io.ReadAll(t.file)
+func (t *Tap) NewReader() io.Reader {
+	return t.file
 }
 
-func (t Tap) WriteLine(s string) (int, error) {
-	line := fmt.Sprintf("%s\n", s)
-	return t.file.WriteString(line)
+// func (t *Tap) ReadAll() ([]byte, error) {
+// 	err := checkSize(t.file, t.maxByteSize)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return io.ReadAll(t.file)
+// }
+
+func (t *Tap) Write(bytes []byte) (int, error) {
+	return t.file.Write(bytes)
 }
 
 func checkSize(

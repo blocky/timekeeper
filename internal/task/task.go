@@ -1,6 +1,9 @@
 package task
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Task struct {
 	Name    string `json:"name"`
@@ -21,7 +24,16 @@ func MakeTask(
 }
 
 func (task Task) String() string {
-	return fmt.Sprintf("Name: '%s' ID: %s Project: %s", task.Name, task.ID, task.Project)
+	return fmt.Sprintf("Name:'%s' ID: %s Project: %s", task.Name, task.ID, task.Project)
+}
+
+func (task *Task) UnmarshalJSON(bytes []byte) error {
+	type Alias Task
+	err := json.Unmarshal(bytes, &struct{ *Alias }{Alias: (*Alias)(task)})
+	if err != nil {
+		return fmt.Errorf("could not unmarshal task: %s", err)
+	}
+	return nil
 }
 
 type Tasks []Task
@@ -42,6 +54,5 @@ func (tasks Tasks) SelectTask(index int) (Task, error) {
 	if index < 0 || index > len(tasks)-1 {
 		return Task{}, fmt.Errorf("No task exists for number:%d", index)
 	}
-	// fmt.Printf("selected task:'%s' id:'%s' project:'%s'\n", task.Name, task.ID, task.Project)
 	return tasks[index], nil
 }

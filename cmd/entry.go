@@ -49,12 +49,11 @@ func addEntry(tasksJSON []byte, filename string) {
 
 	tap, err := tap.MakeTap(filename)
 	check(err)
-	defer tap.Close()
 
 	entry, err := ask.AskEntry(tasks)
 	check(err)
 
-	fmt.Printf("time entry is:\n%s", entry)
+	fmt.Printf("time entry is: %+v\n", entry)
 
 	t := timecard.MakeTimecard(tap)
 	err = t.WriteEntry(entry)

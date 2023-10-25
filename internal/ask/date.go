@@ -5,7 +5,7 @@ import (
 )
 
 func AskDate() (chronos.Date, error) {
-	year := 2023
+	year, _ := chronos.MakeYear(2023)
 
 	month, err := AskMonth("what month? (integer)")
 	if err != nil {

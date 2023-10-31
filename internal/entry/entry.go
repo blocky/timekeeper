@@ -5,13 +5,15 @@ import (
 	"fmt"
 
 	"github.com/blocky/timekeeper/internal/chronos"
+	"github.com/blocky/timekeeper/internal/hash"
 	"github.com/blocky/timekeeper/internal/task"
 )
 
 type Entry struct {
-	Date    chronos.Date `json:"date"`
-	Task    task.Task    `json:"task"`
-	Details string       `json:"details"`
+	ID      hash.Hexdigest `json:"id"`
+	Date    chronos.Date   `json:"date"`
+	Task    task.Task      `json:"task"`
+	Details string         `json:"details"`
 }
 
 func MakeEntry(
@@ -19,7 +21,11 @@ func MakeEntry(
 	task task.Task,
 	details string,
 ) Entry {
+	h := hash.MakeHashFromDate(date)
+	id := hash.MakeHexdigestFromHash(h)
+
 	return Entry{
+		ID:      id,
 		Date:    date,
 		Task:    task,
 		Details: details,

@@ -37,32 +37,27 @@ func uploadEntries(
 	timecardTap, err := tap.MakeAppendingTap(timecardFilename)
 	check(err)
 
-	timecardConfig := timecard.MakeTimecard(timecardTap)
-	check(err)
-
 	uploadTap, err := tap.MakeCreatingTap(uploadConfig)
 	check(err)
 
-	uploader := upload.MakeUploader(uploadTap, DryRun)
-	check(err)
-
+	timecardConfig := timecard.MakeTimecard(timecardTap)
 	entries, err := timecardConfig.ReadEntries()
 	check(err)
 
+	uploader := upload.MakeUploader(uploadTap, DryRun)
 	err = uploader.ReadInConfig()
 	check(err)
 
 	if UploadAll {
-		err := uploader.UploadAll(entries)
-		check(err)
+		err = uploader.UploadAll(entries)
 
 	} else {
-		err := uploader.UploadNumberOfLatestEntries(
+		err = uploader.UploadNumberOfLatestEntries(
 			entries,
 			UploadNumberOfLatestEntries,
 		)
-		check(err)
 	}
+	check(err)
 
 	err = uploader.UpdateConfig()
 	check(err)

@@ -30,11 +30,11 @@ func MakeDate(
 }
 
 func (d Date) StartDateAndTime() string {
-	return fmt.Sprintf("%d-%d-%d %s", d.Year, d.Month, d.Day, d.Start.TimeWithColon())
+	return fmt.Sprintf("%d-%s-%s %s", d.Year, d.Month, d.Day, d.Start.TimeWithColon())
 }
 
 func (d Date) StopDateAndTime() string {
-	return fmt.Sprintf("%d-%d-%d %s", d.Year, d.Month, d.Day, d.Stop.TimeWithColon())
+	return fmt.Sprintf("%d-%s-%s %s", d.Year, d.Month, d.Day, d.Stop.TimeWithColon())
 }
 
 func (d *Date) UnmarshalJSON(bytes []byte) error {

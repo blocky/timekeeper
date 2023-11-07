@@ -28,13 +28,13 @@ var listCmd = &cobra.Command{
 func init() {
 	listCmd.Flags().BoolVarP(&ListAll, "all", "a", false, "list all entries")
 	listCmd.Flags().UintVarP(&ListNumberOfLatestEntries, "list-latest-entries", "n", 1, "list latest number of entries")
-	listCmd.Flags().BoolVarP(&ListPretty, "pretty", "p", false, "list pretty-fied entry JSON")
+	listCmd.Flags().BoolVarP(&ListPretty, "pretty", "p", false, "list as pretty-fied JSON")
 
 	rootCmd.AddCommand(listCmd)
 }
 
 func listEntries(filename string) {
-	tap, err := tap.MakeTap(filename)
+	tap, err := tap.MakeAppendingTap(filename)
 	check(err)
 
 	t := timecard.MakeTimecard(tap)
@@ -54,10 +54,17 @@ func listEntries(filename string) {
 
 	var bytes []byte
 	if ListPretty {
-		bytes, err = json.MarshalIndent(entries, "", "")
+		bytes, err = json.MarshalIndent(entries, " ", " ")
+
 	} else {
 		bytes, err = json.Marshal(entries)
 	}
 	check(err)
-	fmt.Printf("%s\n", string(bytes))
+
+	for _, e := range entries {
+		bytes, err = json.Marshal(e)
+		check(err)
+
+		fmt.Printf("%s\n", bytes)
+	}
 }

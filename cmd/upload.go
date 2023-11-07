@@ -1,65 +1,69 @@
 package cmd
 
 import (
-	"fmt"
-	"os/exec"
-	"strings"
-
-	"github.com/blocky/timekeeper/internal/entry"
 	"github.com/blocky/timekeeper/internal/tap"
 	"github.com/blocky/timekeeper/internal/timecard"
+	"github.com/blocky/timekeeper/internal/upload"
 	"github.com/spf13/cobra"
 )
 
+var DryRun bool
 var UploadAll bool
 var UploadNumberOfLatestEntries uint
 
 var uploadCmd = &cobra.Command{
 	Use:   "upload [timecard] [upload-config]",
 	Short: "upload entries",
-	Args:  cobra.ExactArgs(1),
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		filename := args[0]
-		uploadEntries(filename)
+		config := args[1]
+		uploadEntries(filename, config)
 	},
 }
 
 func init() {
+	uploadCmd.Flags().BoolVarP(&DryRun, "dry-run", "d", true, "do a r dry run of uploads")
 	uploadCmd.Flags().BoolVarP(&UploadAll, "all", "a", false, "list all entries")
 	uploadCmd.Flags().UintVarP(&UploadNumberOfLatestEntries, "list-latest-entries", "n", 1, "list latest number of entries")
 
 	rootCmd.AddCommand(uploadCmd)
 }
 
-func uploadEntries(filename string) {
-	tap, err := tap.MakeTap(filename)
+func uploadEntries(
+	timecardFilename string,
+	uploadConfig string,
+) {
+	timecardTap, err := tap.MakeAppendingTap(timecardFilename)
 	check(err)
 
-	t := timecard.MakeTimecard(tap)
-	entries, err := t.ReadEntries()
+	timecardConfig := timecard.MakeTimecard(timecardTap)
 	check(err)
 
-	if !UploadAll {
-		var list []entry.Entry
+	uploadTap, err := tap.MakeCreatingTap(uploadConfig)
+	check(err)
 
-		n := UploadNumberOfLatestEntries
-		for i := len(entries) - 1; i > -1 && n > 0; i-- {
-			list = append(list, entries[i])
-			n--
-		}
-		entries = list
+	uploader := upload.MakeUploader(uploadTap, DryRun)
+	check(err)
+
+	entries, err := timecardConfig.ReadEntries()
+	check(err)
+
+	err = uploader.ReadInConfig()
+	check(err)
+
+	if UploadAll {
+		err := uploader.UploadAll(entries)
+		check(err)
+
+	} else {
+		err := uploader.UploadNumberOfLatestEntries(
+			entries,
+			UploadNumberOfLatestEntries,
+		)
+		check(err)
 	}
-	for _, e := range entries {
-		format := "clockify-cli manual --interactive=0 --project='%s' --task='%s' --when='%s' --when-to-close='%s' --description='%s'\n"
-		out := BashExec(format, e.Task.Project, e.Task.ID, e.Date.StartDateAndTime(), e.Date.StopDateAndTime(), e.Details)
-		fmt.Println(out)
-	}
-}
 
-func BashExec(format string, a ...any) string {
-	cmd := fmt.Sprintf(format, a...)
-
-	out, err := exec.Command("bash", "-c", cmd).Output()
+	err = uploader.UpdateConfig()
 	check(err)
-	return strings.TrimRight(string(out), "\n")
 }

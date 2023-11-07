@@ -47,7 +47,7 @@ func addEntry(tasksJSON []byte, filename string) {
 	err := json.Unmarshal(tasksJSON, &tasks)
 	check(err)
 
-	tap, err := tap.MakeTap(filename)
+	tap, err := tap.MakeAppendingTap(filename)
 	check(err)
 
 	entry, err := ask.AskEntry(tasks)

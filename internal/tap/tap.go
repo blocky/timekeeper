@@ -18,8 +18,16 @@ type Tap struct {
 	maxByteSize int64
 }
 
-func MakeTap(filename string) (Tap, error) {
+func MakeAppendingTap(filename string) (Tap, error) {
 	file, err := os.OpenFile(filename, os.O_APPEND|os.O_RDWR, os.ModeAppend)
+	if err != nil {
+		return Tap{}, fmt.Errorf("could not tap file: %s", err)
+	}
+	return MakeTapFromRaw(file, 2*Megabyte), nil
+}
+
+func MakeCreatingTap(filename string) (Tap, error) {
+	file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, os.ModeAppend)
 	if err != nil {
 		return Tap{}, fmt.Errorf("could not tap file: %s", err)
 	}
@@ -38,16 +46,20 @@ func (t *Tap) NewReader() io.Reader {
 	return t.file
 }
 
-// func (t *Tap) ReadAll() ([]byte, error) {
-// 	err := checkSize(t.file, t.maxByteSize)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return io.ReadAll(t.file)
-// }
+func (t *Tap) ReadAll() ([]byte, error) {
+	err := checkSize(t.file, t.maxByteSize)
+	if err != nil {
+		return nil, err
+	}
+	return io.ReadAll(t.file)
+}
 
 func (t *Tap) Write(bytes []byte) (int, error) {
 	return t.file.Write(bytes)
+}
+
+func (t *Tap) WriteFromBeginning(bytes []byte) (int, error) {
+	return t.file.WriteAt(bytes, 0)
 }
 
 func checkSize(

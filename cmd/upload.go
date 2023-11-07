@@ -15,7 +15,7 @@ var UploadAll bool
 var UploadNumberOfLatestEntries uint
 
 var uploadCmd = &cobra.Command{
-	Use:   "upload [file]",
+	Use:   "upload [timecard] [upload-config]",
 	Short: "upload entries",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

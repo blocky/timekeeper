@@ -17,7 +17,7 @@ import (
 var tasksJSON []byte
 
 var entryCmd = &cobra.Command{
-	Use:   "entry [file]",
+	Use:   "entry [timecard]",
 	Short: "Add a time entry to the timecard",
 	Long: `Add work done in an epic during some day during a specific time
 

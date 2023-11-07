@@ -16,7 +16,7 @@ var ListNumberOfLatestEntries uint
 var ListPretty bool
 
 var listCmd = &cobra.Command{
-	Use:   "list [file]",
+	Use:   "list [timecard]",
 	Short: "list entries",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {

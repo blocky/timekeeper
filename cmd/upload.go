@@ -12,13 +12,11 @@ var UploadAll bool
 var UploadNumberOfLatestEntries uint
 
 var uploadCmd = &cobra.Command{
-	Use:   "upload [timecard] [upload-config]",
+	Use:   "upload",
 	Short: "upload entries",
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		filename := args[0]
-		config := args[1]
-		uploadEntries(filename, config)
+		uploadEntries()
 	},
 }
 
@@ -30,14 +28,11 @@ func init() {
 	rootCmd.AddCommand(uploadCmd)
 }
 
-func uploadEntries(
-	timecardFilename string,
-	uploadConfig string,
-) {
-	timecardTap, err := tap.MakeAppendingTap(timecardFilename)
+func uploadEntries() {
+	timecardTap, err := tap.MakeAppendingTap(TimecardFilepath)
 	check(err)
 
-	uploadTap, err := tap.MakeCreatingTap(uploadConfig)
+	uploadTap, err := tap.MakeCreatingTap(TimecardUploadFilepath)
 	check(err)
 
 	timecardConfig := timecard.MakeTimecard(timecardTap)

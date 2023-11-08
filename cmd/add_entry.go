@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	_ "embed"
 	"encoding/json"
 	"fmt"
 
@@ -13,11 +12,8 @@ import (
 	"github.com/blocky/timekeeper/internal/timecard"
 )
 
-//go:embed configs/tasks.json
-var tasksJSON []byte
-
-var entryCmd = &cobra.Command{
-	Use:   "entry [timecard]",
+var addEntryCmd = &cobra.Command{
+	Use:   "entry",
 	Short: "Add a time entry to the timecard",
 	Long: `Add work done in an epic during some day during a specific time
 
@@ -33,21 +29,20 @@ Task Description:
 `,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		filename := args[0]
-		addEntry(tasksJSON, filename)
+		addEntry()
 	},
 }
 
 func init() {
-	addCmd.AddCommand(entryCmd)
+	addCmd.AddCommand(addEntryCmd)
 }
 
-func addEntry(tasksJSON []byte, filename string) {
+func addEntry() {
 	var tasks task.Tasks
-	err := json.Unmarshal(tasksJSON, &tasks)
+	err := json.Unmarshal(TasksJSON, &tasks)
 	check(err)
 
-	tap, err := tap.MakeAppendingTap(filename)
+	tap, err := tap.MakeAppendingTap(TimecardFilepath)
 	check(err)
 
 	entry, err := ask.AskEntry(tasks)

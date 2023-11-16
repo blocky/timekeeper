@@ -47,16 +47,13 @@ func listEntries() {
 	}
 
 	var bytes []byte
-	if ListPretty {
-		bytes, err = json.MarshalIndent(entries, " ", " ")
-
-	} else {
-		bytes, err = json.Marshal(entries)
-	}
-	check(err)
-
 	for _, e := range entries {
-		bytes, err = json.Marshal(e)
+
+		if ListPretty {
+			bytes, err = json.MarshalIndent(e, " ", " ")
+		} else {
+			bytes, err = json.Marshal(e)
+		}
 		check(err)
 
 		fmt.Printf("%s\n", bytes)

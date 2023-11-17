@@ -14,14 +14,13 @@ var UploadNumberOfLatestEntries uint
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
 	Short: "upload entries",
-	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		uploadEntries()
 	},
 }
 
 func init() {
-	uploadCmd.Flags().BoolVarP(&DryRun, "dry-run", "d", true, "do a r dry run of uploads")
+	uploadCmd.Flags().BoolVarP(&DryRun, "dry-run", "d", true, "do a dry run of uploads")
 	uploadCmd.Flags().BoolVarP(&UploadAll, "all", "a", false, "list all entries")
 	uploadCmd.Flags().UintVarP(&UploadNumberOfLatestEntries, "list-latest-entries", "n", 1, "list latest number of entries")
 

@@ -102,7 +102,7 @@ func (u *Uploader) Upload(e entry.Entry) error {
 			e.Date.StopDateAndTime(),
 			e.Details,
 		)
-		fmt.Printf("would upload: %s\n", upload)
+		fmt.Printf("would upload: %s", upload)
 		return nil
 	}
 

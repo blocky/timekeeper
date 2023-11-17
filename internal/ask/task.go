@@ -13,7 +13,7 @@ func AskTask(tasks task.Tasks) (task.Task, error) {
 	if err != nil {
 		return task.Task{}, err
 	}
-	task, err := tasks.SelectTask(index)
+	task, err := tasks.GetTask(index)
 	if err != nil {
 		return task, err
 	}

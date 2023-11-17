@@ -50,9 +50,27 @@ func (tasks Tasks) PrintTasks() {
 	fmt.Printf("-----\n")
 }
 
-func (tasks Tasks) SelectTask(index int) (Task, error) {
+func (tasks Tasks) GetTask(index int) (Task, error) {
 	if index < 0 || index > len(tasks)-1 {
-		return Task{}, fmt.Errorf("No task exists for number:%d", index)
+		return Task{}, fmt.Errorf("No task exists for number:'%d'", index)
 	}
 	return tasks[index], nil
+}
+
+type TaskMap map[string]Task
+
+func MakeTaskMap(tasks []Task) TaskMap {
+	var m = make(map[string]Task, len(tasks))
+	for _, task := range tasks {
+		m[task.ID] = task
+	}
+	return TaskMap(m)
+}
+
+func (tasks TaskMap) GetTask(id string) (Task, error) {
+	task, ok := tasks[id]
+	if !ok {
+		return Task{}, fmt.Errorf("No task exists for ID:'%s'", id)
+	}
+	return task, nil
 }

@@ -29,6 +29,43 @@ func MakeDate(
 	}
 }
 
+func MakeDateFromRaw(
+	yearInt int,
+	monthInt int,
+	dayInt int,
+	startStr string,
+	stopStr string,
+) (Date, error) {
+	var msg = "error creating date: %s"
+
+	year, err := MakeYear(yearInt)
+	if err != nil {
+		return Date{}, fmt.Errorf(msg, err)
+	}
+
+	month, err := MakeMonth(monthInt)
+	if err != nil {
+		return Date{}, fmt.Errorf(msg, err)
+	}
+
+	day, err := MakeDay(dayInt)
+	if err != nil {
+		return Date{}, fmt.Errorf(msg, err)
+	}
+
+	start, err := MakeMilitaryTime(startStr)
+	if err != nil {
+		return Date{}, fmt.Errorf(msg, err)
+	}
+
+	stop, err := MakeMilitaryTime(stopStr)
+	if err != nil {
+		return Date{}, fmt.Errorf(msg, err)
+	}
+
+	return MakeDate(year, month, day, start, stop), nil
+}
+
 func (d Date) StartDateAndTime() string {
 	return fmt.Sprintf("%d-%s-%s %s", d.Year, d.Month, d.Day, d.Start.TimeWithColon())
 }

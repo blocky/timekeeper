@@ -33,7 +33,7 @@ DETAILS=$(gum input --placeholder "I did a thing!")
 
 tk add entry \
 	--timecard=$TIMECARD \
-	--year=$YEAR \
+	--year="$YEAR" \
 	--month="$MONTH" \
 	--day="$DAY" \
 	--start="$START" \

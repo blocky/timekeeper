@@ -10,6 +10,7 @@ import (
 var DryRun bool
 var UploadAll bool
 var UploadNumberOfLatestEntries uint
+var Verbose bool
 
 var uploadCmd = &cobra.Command{
 	Use:   "upload",
@@ -20,9 +21,12 @@ var uploadCmd = &cobra.Command{
 }
 
 func init() {
-	uploadCmd.Flags().BoolVarP(&DryRun, "dry-run", "d", true, "do a dry run of uploads")
-	uploadCmd.Flags().BoolVarP(&UploadAll, "all", "a", false, "list all entries")
-	uploadCmd.Flags().UintVarP(&UploadNumberOfLatestEntries, "list-latest-entries", "n", 1, "list latest number of entries")
+	f := uploadCmd.Flags()
+
+	f.BoolVarP(&DryRun, "dry-run", "d", false, "do a dry run of uploads")
+	f.BoolVarP(&UploadAll, "all", "a", false, "list all entries")
+	f.UintVarP(&UploadNumberOfLatestEntries, "list-latest-entries", "n", 1, "list latest number of entries")
+	f.BoolVarP(&Verbose, "verbose", "v", false, "verbose mode on uploader")
 
 	rootCmd.AddCommand(uploadCmd)
 }
@@ -38,7 +42,7 @@ func uploadEntries() {
 	entries, err := timecardConfig.ReadEntries()
 	check(err)
 
-	uploader := upload.MakeUploader(uploadTap, DryRun)
+	uploader := upload.MakeUploader(uploadTap, DryRun, Verbose)
 	err = uploader.ReadInConfig()
 	check(err)
 

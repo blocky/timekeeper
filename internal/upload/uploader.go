@@ -13,10 +13,16 @@ type Uploader struct {
 	tap.Tap
 	uploads Uploads
 	dryRun  bool
+	verbose bool
 }
 
-func MakeUploader(tap tap.Tap, dryRun bool) Uploader {
-	return Uploader{tap, MakeUploads(), dryRun}
+func MakeUploader(tap tap.Tap, dryRun bool, verbose bool) Uploader {
+	return Uploader{
+		tap,
+		MakeUploads(),
+		dryRun,
+		verbose,
+	}
 }
 
 func (u Uploader) ReadConfig() (Uploads, error) {
@@ -82,7 +88,9 @@ func (u *Uploader) UploadNumberOfLatestEntries(
 func (u *Uploader) Upload(e entry.Entry) error {
 	uploaded := u.uploads[e.ID]
 	if uploaded {
-		fmt.Printf("ID:'%s' is already uploaded\n", e.ID)
+		if u.verbose {
+			fmt.Printf("ID:'%s' is already uploaded\n", e.ID)
+		}
 		return nil
 	}
 

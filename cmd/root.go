@@ -26,9 +26,11 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&Interactive, "interactive", "i", true, "interactive mode")
-	rootCmd.PersistentFlags().StringVarP(&TimecardFilepath, "timecard", "t", "timecard.json", "timecard filepath")
-	rootCmd.PersistentFlags().StringVarP(&TimecardUploadFilepath, "uploads", "u", ".timecard-uploads", "timecard upload config filepath")
+	f := rootCmd.PersistentFlags()
+
+	f.BoolVarP(&Interactive, "interactive", "i", false, "use interactive prompts")
+	f.StringVarP(&TimecardFilepath, "timecard", "t", "timecard.json", "timecard filepath")
+	f.StringVarP(&TimecardUploadFilepath, "uploads", "u", ".timecard-uploads", "timecard upload config filepath")
 }
 
 func Execute() {

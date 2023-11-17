@@ -50,6 +50,14 @@ func (tasks Tasks) PrintTasks() {
 	fmt.Printf("-----\n")
 }
 
+func (tasks Tasks) PrintKeyValue() {
+	var out string
+	for _, task := range tasks {
+		out += fmt.Sprintf("%s:'%s'\n", task.ID, task.Name)
+	}
+	fmt.Println(out)
+}
+
 func (tasks Tasks) GetTask(index int) (Task, error) {
 	if index < 0 || index > len(tasks)-1 {
 		return Task{}, fmt.Errorf("No task exists for number:'%d'", index)

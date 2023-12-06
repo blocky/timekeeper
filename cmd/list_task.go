@@ -12,9 +12,8 @@ import (
 var KeyValueMode bool
 
 var listTaskCmd = &cobra.Command{
-	Use:     "task",
-	Aliases: []string{"tasks"},
-	Short:   "List tasks",
+	Use:   "task",
+	Short: "List tasks",
 	Run: func(cmd *cobra.Command, args []string) {
 		listTasks()
 	},

@@ -56,7 +56,4 @@ func uploadEntries() {
 		)
 	}
 	check(err)
-
-	err = uploader.UpdateConfig()
-	check(err)
 }

@@ -65,9 +65,15 @@ func (u *Uploader) UpdateConfig() error {
 
 func (u *Uploader) UploadAll(entries []entry.Entry) error {
 	for _, e := range entries {
+
 		err := u.Upload(e)
 		if err != nil {
-			return err
+			return fmt.Errorf("error uploading:'%w'", err)
+		}
+
+		err = u.UpdateConfig()
+		if err != nil {
+			return fmt.Errorf("error updating config:'%w'", err)
 		}
 	}
 	return nil
@@ -115,7 +121,7 @@ func (u *Uploader) Upload(e entry.Entry) error {
 		e.Details,
 	)
 	if err != nil {
-		return fmt.Errorf("bash cmd error: %s", err)
+		return fmt.Errorf("%w' for entry ID:'%s'", err, e.ID)
 	}
 
 	fmt.Println(output)

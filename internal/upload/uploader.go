@@ -84,9 +84,12 @@ func (u *Uploader) UploadNumberOfLatestEntries(
 	n uint,
 ) error {
 	var latest []entry.Entry
-	for i := len(entries) - 1; i >= 0 && n > 0; i-- {
+
+	var i = len(entries) - 1
+	var stop = i - int(n)
+
+	for ; i > 0 && i >= stop; i-- {
 		latest = append(latest, entries[i])
-		n--
 	}
 	return u.UploadAll(latest)
 }

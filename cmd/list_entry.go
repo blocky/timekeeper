@@ -12,8 +12,9 @@ import (
 )
 
 var listEntryCmd = &cobra.Command{
-	Use:   "entry",
-	Short: "list entries",
+	Use:     "entry",
+	Aliases: []string{"entries"},
+	Short:   "list entries",
 	Run: func(cmd *cobra.Command, args []string) {
 		listEntries()
 	},

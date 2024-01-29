@@ -36,6 +36,13 @@ allow-incomplete: true
 token: <your-clockify-token>
 ```
 
+## Install jq
+You will need to install jq
+
+```bash
+sudo apt-get install jq
+```
+
 ## Fetch Tasks
 You will need to fetch the different epics from clockify. These include epics
 for work, time off, and meetings. This make command will fetch all the pertinent

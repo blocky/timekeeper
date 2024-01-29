@@ -20,4 +20,7 @@ set -e
 # 63aee21ca3e51625ef081f39:'ZPR - Strong Verify'
 # 64a6e9f289058175da4aa74d:'ZPR - Verify Config'
 
-tk add entry -m= -d= --start= --stop= --task-id= --details=""
+TIMECARD=/home/ian/timecard.json
+UPLOADS=/home/ian/.timecard-uploads
+
+tk add entry -t=$TIMECARD -u=$UPLOADS -m= -d= --start= --stop= --task-id= --details=""

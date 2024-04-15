@@ -53,7 +53,7 @@ func (tasks Tasks) PrintTasks() {
 func (tasks Tasks) PrintKeyValue() {
 	var out string
 	for _, task := range tasks {
-		out += fmt.Sprintf("%s:'%s'\n", task.ID, task.Name)
+		out += fmt.Sprintf("%s:'%s'\n", task.Name, task.ID)
 	}
 	fmt.Println(out)
 }
